@@ -17,7 +17,16 @@
 # include <map>
 # include <string>
 
-std::map	FillMap(std::ifstream ifs);
-void		BitcoinExchange(std::map &rate, std::string const &date, float const &value);
+class	IncorrectDateOrValueException : public std::exception 
+{
+public:
+	virtual char const *what(void) const throw()
+	{
+		return "Date or value is incorrect";
+	}
+};
+
+std::map<std::string, float>	FillMap(std::ifstream &ifs);
+void	BitcoinExchange(std::map<std::string, float> &data, std::ifstream &ifs);
 
 #endif
