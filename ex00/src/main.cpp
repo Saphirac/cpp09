@@ -6,7 +6,7 @@
 /*   By: mcourtoi <mcourtoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 15:43:41 by mcourtoi          #+#    #+#             */
-/*   Updated: 2023/09/29 17:18:12 by mcourtoi         ###   ########.fr       */
+/*   Updated: 2023/10/09 01:40:13 by mcourtoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	main(int const ac, char const *const *const av)
 	try {
 		data = FillMap(ifs);
 	}
-	catch (const std::exception& e) {
+	catch (std::exception const &e)
+	{
 		std::cerr << "Error : " << e.what() << std::endl;
 		return 1;
 	}
