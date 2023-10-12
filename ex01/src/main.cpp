@@ -15,13 +15,13 @@
 
 int	main(int ac, char **av)
 {
-	std::string	input(av[1]);
 	if (ac != 2)
 	{
 		std::cerr << "Input must be in one arg." << std::endl;
 		return 1;
 	}
-	if (isArgCorrect(input) == false)
+	std::string	input(av[1]);
+	if (!isArgCorrect(input))
 	{
 		std::cerr << "Input contains invalid input or incorrect operations" << std::endl;
 		return 1;

@@ -24,7 +24,7 @@ public:
 	}
 };
 
-bool	isArgCorrect(std::string arg);
-void	rpn(std::string arg);
+bool	isArgCorrect(std::string &arg);
+void	rpn(std::string &arg);
 
 #endif
