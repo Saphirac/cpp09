@@ -20,23 +20,27 @@ bool	isDateCorrect(std::string date)
 {
 	if (date.length() != 10 || std::count(date.begin(), date.end(), '-') != 2)
 		return false;
-
 	if (date.find('-', 0) != 4 || date.find('-', 5) != 7)
 		return false;
 
-	int year = std::atol(date.substr(0, 4).c_str());
+	for (size_t i = 0; i < date.length(); i++)
+		if (!isdigit(date[i]) && date[i] != ' ' && date[i] != '-')
+		 return false;
+
 	int month = std::atol(date.substr(5, 2).c_str());
 	int day = std::atol(date.substr(8, 2).c_str());
 
-	if (year < 0 || year > INT_MAX || month < 1 || month > 12 || day < 1 || day > 31)
+	if (month < 1 || month > 12 || day < 1 || day > 31)
 		return false;
 	return true;
 }
 
 bool	isValueCorrect(std::string value)
 {
+	if (std::count(value.begin(), value.end(), '.') > 1)
+		return false;
 	for (int i = 0; value[i]; i++)
-		if (isdigit(value[i]) == false && value[i] != '.' && std::count(value.begin(), value.end(), '.') > 1)
+		if (!isdigit(value[i]) && value[i] != '.')
 			return false;
 	return true;
 }

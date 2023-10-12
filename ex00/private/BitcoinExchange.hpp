@@ -22,7 +22,7 @@ class	IncorrectDateOrValueException : public std::exception
 public:
 	virtual char const *what(void) const throw()
 	{
-		return "Date or value is incorrect";
+		return "Date or value is incorrect.";
 	}
 };
 
