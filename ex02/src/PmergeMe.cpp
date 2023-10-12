@@ -1,5 +1,5 @@
 /* ************************************************************************** */
-/*			                                                                */
+/*				                                                            */
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -15,27 +15,24 @@
 #include <climits>
 #include <algorithm>
 #include <iterator>
+#include <cstdlib>
 
-bool	checkArg(int ac, char **arg)
+bool	checkArg(int const ac, char const *const *const arg)
 {
 	for (int i = 0; i < ac; i++)
 	{
 		std::string	current(arg[i]);
-		int	prev = -1;
-		int	testatol = atol(current);
+		int	testatol = atol(current.c_str());
 		if (testatol < 0 || testatol > INT_MAX)
 			return false;
 		for (int j = 0; current[j]; j++)
 			if (!isdigit(current[j]) )
 				return false;
-		if (prev == testatol)
-			return false;
-		int	prev = atoi(current);
 	}
 	return true;
 }
 
-std::vector<int>	getVector(int ac, char **arg)
+std::vector<int>	getVector(int const ac, char const *const *const arg)
 {
 	std::vector<int>	ret;
 
@@ -44,7 +41,7 @@ std::vector<int>	getVector(int ac, char **arg)
 	return ret;
 }
 
-std::list<int>		getList(int ac, char **arg)
+std::list<int>		getList(int const ac, char const *const *const arg)
 {
 	std::list<int>	ret;
 
@@ -60,7 +57,7 @@ std::vector<int>	submergeVector(std::vector<int> const &A, std::vector<int> cons
 
 	if (A.size() == 0)
 		return B;
-	else if (sizeB.size() == 0)
+	else if (B.size() == 0)
 		return A;
 
 	if (A[medianA] < B[medianB])
@@ -137,17 +134,16 @@ std::list<int>		submergeList(std::list<int> const &A, std::list<int> const &B)
 
 	ret.splice(ret.end(), mergedLeft);
 	ret.splice(ret.end(), mergedRight);
-
 	return ret;
 }
 
 std::list<int>		mergeList(std::list<int> const &arg)
 {
 	std::list<int>	ret;
-	std::list<int>::iterator	middle = numbers.begin();
-	std::advance(middle, numbers.size() / 2);
-	std::list<int>	A(numbers.begin(), middle);
-	std::list<int>	B(middle, numbers.end());
+	std::list<int>::const_iterator	middle = arg.begin();
+	std::advance(middle, arg.size() / 2);
+	std::list<int>	A(arg.begin(), middle);
+	std::list<int>	B(middle, arg.end());
 
 	A.sort();
 	B.sort();
@@ -156,34 +152,37 @@ std::list<int>		mergeList(std::list<int> const &arg)
 	return ret;
 }
 
-void	binarySort(std::vector<int> const &vec)
+void	binarySort(std::vector<int> &vec)
 {
-	for (int i = 1; i < arr.size(); i++)
+	for (size_t i = 1; i < vec.size(); i++)
 	{
-		int key = arr[i];
+		int key = vec[i];
 		int left = 0, right = i;
 
 		while (left < right) 
 		{
 			int mid = left + (right - left) / 2;
-			if (arr[mid] < key)
+			if (vec[mid] < key)
 				left = mid + 1;
 			else
 				right = mid;
 		}
 		for (int j = i; j > left; j--)
-			arr[j] = arr[j - 1];
-		arr[left] = key;
+			vec[j] = vec[j - 1];
+		vec[left] = key;
 	}
 }
 
-void	binarySort(std::list<int> const &lst)
+void	binarySort(std::list<int> &lst)
 {
-	for (std::list<int>::iterator i = ++lst.begin(); i != lst.end();)
+	if (lst.empty())
+		return;
+	std::list<int>::iterator	i = ++lst.begin();
+	for (; i != lst.end(); i++)
 	{
-		int	key = *i;
+		int key = *i;
 
-		std::list<int>::iterator left = lst.begin(), right = i;
+		std::list<int>::iterator	left = lst.begin(), right = i;
 		while (left != right)
 		{
 			std::list<int>::iterator	mid = left;
@@ -194,8 +193,12 @@ void	binarySort(std::list<int> const &lst)
 			else
 				right = mid;
 		}
-
-		i = lst.erase(i);
-		lst.insert(left, key);
+		if (left != i)
+		{
+			i = lst.erase(i);
+			lst.insert(left, key);
+		}
+		else
+			++i;
 	}
 }
