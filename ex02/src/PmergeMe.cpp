@@ -50,155 +50,138 @@ std::list<int>		getList(int const ac, char const *const *const arg)
 	return ret;
 }
 
-std::vector<int>	submergeVector(std::vector<int> const &A, std::vector<int> const &B)
+int find_in_map(std::vector<std::pair<int, int> > &pairs, int key)
 {
-	std::vector<int>	ret;
-	size_t medianA = A.size() / 2, medianB = B.size() / 2;
-
-	if (A.size() == 0)
-		return B;
-	else if (B.size() == 0)
-		return A;
-
-	if (A[medianA] < B[medianB])
+	for (size_t i = 0; i < pairs.size(); ++i)
 	{
-		ret.push_back(A[medianA]);
-		ret.push_back(B[medianB]);
-	} else
-	{
-		ret.push_back(B[medianB]);
-		ret.push_back(A[medianA]);
+		if (pairs[i].first == key)
+			return pairs[i].second;
 	}
-
-	std::vector<int> leftA(A.begin(), A.begin() + medianA);
-	std::vector<int> rightA(A.begin() + medianA + 1, A.end());
-	std::vector<int> leftB(B.begin(), B.begin() + medianB);
-	std::vector<int> rightB(B.begin() + medianB + 1, B.end());
-
-	std::vector<int> mergedLeft = submergeVector(leftA, leftB);
-	std::vector<int> mergedRight = submergeVector(rightA, rightB);
-
-	ret.insert(ret.end(), mergedLeft.begin(), mergedLeft.end());
-	ret.insert(ret.end(), mergedRight.begin(), mergedRight.end());
-
-	return ret;
+	return -1;
 }
 
-std::vector<int>	mergeVector(std::vector<int> const &arg)
+int binarySearch(std::vector<int> &vec, int target, int end)
 {
-	std::vector<int>	ret;
-	std::vector<int>	A(arg.begin(), arg.begin() + arg.size() / 2);
-	std::vector<int>	B(arg.begin() + arg.size() / 2, arg.end());
-
-	std::sort(A.begin(), A.end());
-	std::sort(B.begin(), B.end());
-	
-	ret = submergeVector(A, B);
-	return ret;
-}
-
-std::list<int>		submergeList(std::list<int> const &A, std::list<int> const &B)
-{
-	std::list<int>	ret;
-
-	if (A.empty())
-		return B;
-	else if (B.empty())
-		return A;
-
-	std::list<int>::const_iterator medianA = A.begin();
-	std::advance(medianA, A.size() / 2);
-	std::list<int>::const_iterator medianB = B.begin();
-	std::advance(medianB, B.size() / 2);
-
-	if (*medianA < *medianB)
+	int start = 0;
+	while (start < end)
 	{
-		ret.push_back(*medianA);
-		ret.push_back(*medianB);
-	} 
-	else
-	{
-		ret.push_back(*medianB);
-		ret.push_back(*medianA);
+		int mid = start + (end - start) / 2;
+		if (vec[mid] < target)
+			start = mid + 1;
+		else
+			end = mid;
 	}
-
-	std::list<int> leftA(A.begin(), medianA);
-	std::list<int> rightA(medianA, A.end());
-	rightA.pop_front();
-	std::list<int> leftB(B.begin(), medianB);
-	std::list<int> rightB(medianB, B.end());
-	rightB.pop_front();
-
-	std::list<int> mergedLeft = submergeList(leftA, leftB);
-	std::list<int> mergedRight = submergeList(rightA, rightB);
-
-	ret.splice(ret.end(), mergedLeft);
-	ret.splice(ret.end(), mergedRight);
-	return ret;
+	return start;
 }
 
-std::list<int>		mergeList(std::list<int> const &arg)
+
+std::vector<int>	sortVector(std::vector<int> &arg)
 {
-	std::list<int>	ret;
-	std::list<int>::const_iterator	middle = arg.begin();
-	std::advance(middle, arg.size() / 2);
-	std::list<int>	A(arg.begin(), middle);
-	std::list<int>	B(middle, arg.end());
+	int n = arg.size();
+	if (n < 2)
+		return arg;
 
-	A.sort();
-	B.sort();
-
-	ret = submergeList(A, B);
-	return ret;
-}
-
-void	binarySort(std::vector<int> &vec)
-{
-	for (size_t i = 1; i < vec.size(); i++)
+	std::vector<std::pair<int, int> >	pairs;
+	std::vector<int>	larger;
+	for (int i = 0; i < n - 1; i += 2)
 	{
-		int key = vec[i];
-		int left = 0, right = i;
-
-		while (left < right) 
+		if (arg[i] > arg[i + 1])
 		{
-			int mid = left + (right - left) / 2;
-			if (vec[mid] < key)
-				left = mid + 1;
-			else
-				right = mid;
-		}
-		for (int j = i; j > left; j--)
-			vec[j] = vec[j - 1];
-		vec[left] = key;
-	}
-}
-
-void	binarySort(std::list<int> &lst)
-{
-	if (lst.empty())
-		return;
-	std::list<int>::iterator	i = ++lst.begin();
-	for (; i != lst.end(); i++)
-	{
-		int key = *i;
-
-		std::list<int>::iterator	left = lst.begin(), right = i;
-		while (left != right)
-		{
-			std::list<int>::iterator	mid = left;
-			std::advance(mid, std::distance(left, right) / 2);
-
-			if (*mid < key)
-				left = ++mid;
-			else
-				right = mid;
-		}
-		if (left != i)
-		{
-			i = lst.erase(i);
-			lst.insert(left, key);
+			larger.push_back(arg[i]);
+			pairs.push_back(std::make_pair(arg[i], arg[i + 1]));
 		}
 		else
-			++i;
+		{
+			larger.push_back(arg[i + 1]);
+			pairs.push_back(std::make_pair(arg[i + 1], arg[i]));
+		}
 	}
+
+	larger = sortVector(larger);
+
+	std::vector<int>	smaller;
+	for (size_t i = 0; i < larger.size(); ++i)
+		smaller.push_back(find_in_map(pairs, larger[i]));
+
+	for (size_t i = 0; i < smaller.size(); i++)
+	{
+		int pos = binarySearch(larger, smaller[i], 2 * i + 1);
+		larger.insert(larger.begin() + pos, smaller[i]);
+	}
+
+	if (n % 2 != 0)
+	{
+		int pos = binarySearch(larger, arg[n - 1], larger.size());
+		larger.insert(larger.begin() + pos, arg[n - 1]);
+	}
+
+	return larger;
+}
+
+int binarySearch(std::list<int> &lst, int target, int end)
+{
+	int start = 0;
+	std::list<int>::iterator it = lst.begin();
+	while (start < end && it != lst.end())
+	{
+		int mid = start + (end - start) / 2;
+		std::list<int>::iterator midIt = lst.begin();
+		std::advance(midIt, mid);
+		if (*midIt < target)
+			start = mid + 1;
+		else
+			end = mid;
+		it++;
+	}
+	return start;
+}
+
+std::list<int> sortList(std::list<int> const &arg)
+{
+	int n = arg.size();
+	if (n < 2)
+		return arg;
+
+	std::vector<std::pair<int, int> >	pairs;
+	std::list<int>	larger;
+	std::list<int>::const_iterator it = arg.begin();
+	for (int i = 0; i < n - 1; i += 2)
+	{
+		int first = *it; ++it;
+		int second = *it; ++it;
+		if (first > second)
+		{
+			larger.push_back(first);
+			pairs.push_back(std::make_pair(first, second));
+		}
+		else
+		{
+			larger.push_back(second);
+			pairs.push_back(std::make_pair(second, first));
+		}
+	}
+
+	larger = sortList(larger);
+
+	std::list<int>	smaller;
+	for (std::list<int>::iterator j = larger.begin(); j != larger.end(); j++)
+		smaller.push_back(find_in_map(pairs, *j));
+
+	for (std::list<int>::iterator j = smaller.begin(); j != smaller.end(); j++)
+	{
+		int pos = binarySearch(larger, *j, 2 * std::distance(smaller.begin(), j) + 1);
+		std::list<int>::iterator insertIt = larger.begin();
+		std::advance(insertIt, pos);
+		larger.insert(insertIt, *j);
+	}
+
+	if (n % 2 != 0)
+	{
+		int pos = binarySearch(larger, arg.back(), larger.size());
+		std::list<int>::iterator insertIt = larger.begin();
+		std::advance(insertIt, pos);
+		larger.insert(insertIt, arg.back());
+	}
+
+	return larger;
 }

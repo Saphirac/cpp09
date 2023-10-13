@@ -23,7 +23,7 @@ int	main(int ac, char **av)
 	std::string	input(av[1]);
 	if (!isArgCorrect(input))
 	{
-		std::cerr << "Input contains invalid input or incorrect operations" << std::endl;
+		std::cerr << "Input should only be digits and operators." << std::endl;
 		return 1;
 	}
 	try 

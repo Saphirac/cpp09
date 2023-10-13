@@ -29,7 +29,7 @@ bool	isArgCorrect(std::string &arg)
 	{
 		if (!isdigit(arg[i]) && !isOperator(arg[i]) && arg[i] != ' ')
 			return false;
-		if (i != arg.length() && ((isdigit(arg[i]) || isOperator(arg[i])) && (arg[i + 1] != ' ' && arg[i + 1] != '\0')))
+		if ((isdigit(arg[i]) || isOperator(arg[i])) && (arg[i + 1] != ' ' && arg[i + 1] != '\0'))
 			return false;
 	}
 	return true;
@@ -37,7 +37,7 @@ bool	isArgCorrect(std::string &arg)
 
 void	makeOperation(std::stack<int> &pile, char c)
 {
-	long result = 0;
+	long long result = 0;
 	int nb1 = pile.top();
 	pile.pop();
 	int nb2 = pile.top();
@@ -49,7 +49,7 @@ void	makeOperation(std::stack<int> &pile, char c)
 		result = nb2 - nb1;
 	else if (c == '/')
 	{
-		if (nb2 == 0)
+		if (nb1 == 0)
 			throw OperationProblem();
 		result = nb2 / nb1;
 	}
@@ -58,7 +58,7 @@ void	makeOperation(std::stack<int> &pile, char c)
 
 	if (result > INT_MAX || result < INT_MIN)
 		throw OperationProblem();
-	pile.push(result); // Mettre le résultat dans la pile
+	pile.push(result);
 }
 
 void	rpn(std::string &arg)

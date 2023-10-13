@@ -24,7 +24,7 @@ bool	isDateCorrect(std::string date)
 		return false;
 
 	for (size_t i = 0; i < date.length(); i++)
-		if (!isdigit(date[i]) && date[i] != ' ' && date[i] != '-')
+		if (!isdigit(date[i]) && date[i] != '-')
 		 return false;
 
 	int month = std::atol(date.substr(5, 2).c_str());
