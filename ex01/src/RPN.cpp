@@ -37,10 +37,10 @@ bool	isArgCorrect(std::string &arg)
 
 void	makeOperation(std::stack<int> &pile, char c)
 {
-	long long result = 0;
-	int nb1 = pile.top();
+	long long	result = 0;
+	long	nb1 = pile.top();
 	pile.pop();
-	int nb2 = pile.top();
+	long	nb2 = pile.top();
 	pile.pop();
 
 	if (c == '+')

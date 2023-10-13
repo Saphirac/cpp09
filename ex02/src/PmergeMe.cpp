@@ -22,8 +22,10 @@ bool	checkArg(int const ac, char const *const *const arg)
 	for (int i = 0; i < ac; i++)
 	{
 		std::string	current(arg[i]);
-		int	testatol = atol(current.c_str());
-		if (testatol < 0 || testatol > INT_MAX)
+		if (current.length() > 10)
+			return false;
+		int	testatof = atof(current.c_str());
+		if (testatof < 0 || testatof > INT_MAX)
 			return false;
 		for (int j = 0; current[j]; j++)
 			if (!isdigit(current[j]) )
